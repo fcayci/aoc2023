@@ -87,9 +87,31 @@ fn conundrum1(games: Vec<&str>, bucket: Round) -> usize {
         .sum()
 }
 
-
 fn conundrum2(games: Vec<&str>) -> usize {
-    0
+    games
+        .into_iter()
+        .map(|game| {
+            // get the rounds
+            let rounds = game.split(":").nth(1).unwrap();
+            let game = rounds.split(";").map(|g| Round::from_str(g).unwrap());
+            // get max of each colors for rounds in a game
+            let red = game
+                .clone()
+                .map(|g| g.red)
+                .max()
+                .unwrap_or(Some(0))
+                .unwrap();
+            let blue = game
+                .clone()
+                .map(|g| g.blue)
+                .max()
+                .unwrap_or(Some(0))
+                .unwrap();
+            let green = game.map(|g| g.green).max().unwrap_or(Some(0)).unwrap();
+            // calculate power
+            red * blue * green
+        })
+        .sum()
 }
 
 fn main() {
